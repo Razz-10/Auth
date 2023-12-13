@@ -32,8 +32,42 @@ app.post("/register", async (req,res)=>{
         username:username,
         password: bcrypt.hashSync(password,8)
     })
-    res.send("User registerd sucesfully")
+    res.redirect("login")
 
+})
+
+
+app.get("/login",(req,res)=>{
+    res.render("login")
+})
+app.post("/login",async(req,res)=>{
+    console.log(req.body)
+    const email=req.body.email
+    const password=req.body.password
+
+
+    // 1st tyoemail vakousers table ma xaki xaina check garxam
+ const userExits =await users.findAll({
+    where :{
+        email:email
+    }
+})
+
+
+if(userExits.length >0){
+    //2nd check password
+    const isMatch = bcrypt.compareSync(password,userExits[0].password)
+    if(isMatch){
+        res.send("Invalidemailand password")
+    }
+    else{
+
+      res.send("Invalidemailand password")
+    }
+}
+else{
+    res.send("Invalid email andpassword")
+}
 })
 
 
